@@ -1,10 +1,12 @@
 package com.example.Helpdesk.model;
 
+import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Tab_User")
 public class UsuarioModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,16 +20,20 @@ public class UsuarioModel {
     @Column(nullable = false)
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PerfilUsuario perfil = PerfilUsuario.CLIENTE;
+
     public UsuarioModel() {
     }
 
-    public UsuarioModel(Long id, String nome, String email, String senha) {
+    public UsuarioModel(Long id, String nome, String email, String senha, PerfilUsuario perfil) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.perfil = perfil;
     }
-
 
     public Long getId() {
         return id;
@@ -59,5 +65,13 @@ public class UsuarioModel {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public PerfilUsuario getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(PerfilUsuario perfil) {
+        this.perfil = perfil;
     }
 }
