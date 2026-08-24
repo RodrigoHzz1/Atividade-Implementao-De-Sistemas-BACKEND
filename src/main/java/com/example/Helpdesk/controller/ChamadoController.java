@@ -26,6 +26,11 @@ public class ChamadoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(chamadoCriado);
     }
 
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<ChamadoResponseDto>> listarPorUsuario(@PathVariable Long usuarioId){
+        return ResponseEntity.ok(chamadoService.listarPorUsuario(usuarioId));
+    }
+
     @GetMapping
     public ResponseEntity<List<ChamadoResponseDto>> listarTodos() {
         return ResponseEntity.ok(chamadoService.listarTodos());
