@@ -1,5 +1,6 @@
 package com.example.Helpdesk.model;
 
+import com.example.Helpdesk.model.ChamadosEnum.NivelSuporte;
 import com.example.Helpdesk.model.ChamadosEnum.Prioridade;
 import com.example.Helpdesk.model.ChamadosEnum.StatusChamado;
 import jakarta.persistence.*;
@@ -30,9 +31,17 @@ public class ChamadoModel {
     @Column(nullable = false)
     private StatusChamado status = StatusChamado.ABERTO;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NivelSuporte nivelAtual = NivelSuporte.N1;
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private UsuarioModel solicitante;
+
+    @ManyToOne
+    @JoinColumn(name = "tecnico_id")
+    private UsuarioModel tecnicoAtribuido;
 
     private LocalDateTime dataCriacao;
 
@@ -92,12 +101,28 @@ public class ChamadoModel {
         this.status = status;
     }
 
+    public NivelSuporte getNivelAtual() {
+        return nivelAtual;
+    }
+
+    public void setNivelAtual(NivelSuporte nivelAtual) {
+        this.nivelAtual = nivelAtual;
+    }
+
     public UsuarioModel getSolicitante() {
         return solicitante;
     }
 
     public void setSolicitante(UsuarioModel solicitante) {
         this.solicitante = solicitante;
+    }
+
+    public UsuarioModel getTecnicoAtribuido() {
+        return tecnicoAtribuido;
+    }
+
+    public void setTecnicoAtribuido(UsuarioModel tecnicoAtribuido) {
+        this.tecnicoAtribuido = tecnicoAtribuido;
     }
 
     public LocalDateTime getDataCriacao() {
