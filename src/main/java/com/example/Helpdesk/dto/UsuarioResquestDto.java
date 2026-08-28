@@ -1,8 +1,7 @@
 package com.example.Helpdesk.dto;
 
-import jakarta.validation.constraints.Email;
+import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UsuarioResquestDto {
@@ -10,44 +9,54 @@ public class UsuarioResquestDto {
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
-    @NotBlank(message = "O email é obrigatório")
-    @Email(message = "Informe um email válido")
+    @NotBlank(message = "O e-mail é obrigatório")
     private String email;
 
-    @NotBlank(message = "Informe a senha")
+    @NotBlank(message = "A senha é obrigatória")
     @Size(min = 4, max = 20, message = "A senha deve ter entre 4 e 20 caracteres")
     private String senha;
+
+    private PerfilUsuario perfil;
 
     public UsuarioResquestDto() {
     }
 
-    public UsuarioResquestDto(String nome, String email, String senha) {
+    public UsuarioResquestDto(String nome, String email, String senha, PerfilUsuario perfil) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.perfil = perfil;
     }
 
-    public @NotBlank(message = "O nome é obrigatório") String getNome() {
+    public String getNome() {
         return nome;
     }
 
-    public void setNome(@NotBlank(message = "O nome é obrigatório") String nome) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public @NotBlank(message = "O email é obrigatório") @Email(message = "Informe um email válido") String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@NotBlank(message = "O email é obrigatório") @Email(message = "Informe um email válido") String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public @NotBlank(message = "Informe a senha") @Size(min = 4, max = 20, message = "A senha deve ter entre 4 e 20 caracteres") String getSenha() {
+    public String getSenha() {
         return senha;
     }
 
-    public void setSenha(@NotBlank(message = "Informe a senha") @Size(min = 4, max = 20, message = "A senha deve ter entre 4 e 20 caracteres") String senha) {
+    public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public PerfilUsuario getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(PerfilUsuario perfil) {
+        this.perfil = perfil;
     }
 }

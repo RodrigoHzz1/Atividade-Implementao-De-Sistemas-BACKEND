@@ -1,6 +1,8 @@
 package com.example.Helpdesk.services;
+
 import com.example.Helpdesk.dto.UsuarioResponseDto;
 import com.example.Helpdesk.dto.UsuarioResquestDto;
+import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import com.example.Helpdesk.model.UsuarioModel;
 import com.example.Helpdesk.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,16 +24,13 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDto criar(UsuarioResquestDto dto) {
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("E-mail já cadastrado no sistema.");
-        }
-
         UsuarioModel usuario = new UsuarioModel();
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
-
-
         usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
+
+        // Define CLIENTE caso o perfil venha nulo no DTO
+        usuario.setPerfil(dto.getPerfil() != null ? dto.getPerfil() : PerfilUsuario.CLIENTE);
 
         UsuarioModel usuarioSalvo = usuarioRepository.save(usuario);
         return converterParaDto(usuarioSalvo);
@@ -72,8 +71,22 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
+    public UsuarioResponseDto alterarPerfil(Long id, PerfilUsuario novoPerfil) {
+        UsuarioModel usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+
+        usuario.setPerfil(novoPerfil);
+
+        UsuarioModel usuarioAtualizado = usuarioRepository.save(usuario);
+        return converterParaDto(usuarioAtualizado);
+    }
+
+    public UsuarioResponseDto promoverParaAdmin(Long id) {
+        return alterarPerfil(id, PerfilUsuario.ADMIN);
+    }
+
     private UsuarioResponseDto converterParaDto(UsuarioModel usuario) {
-        return new UsuarioResponseDto(usuario.getId(), usuario.getNome(), usuario.getEmail());
+        return new UsuarioResponseDto(usuario);
     }
 
     public UsuarioResponseDto alterarPerfil(Long id, PerfilUsuario novoPerfil) {

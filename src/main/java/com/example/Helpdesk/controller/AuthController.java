@@ -2,6 +2,7 @@ package com.example.Helpdesk.controller;
 
 import com.example.Helpdesk.config.TokenService;
 import com.example.Helpdesk.dto.LoginRequestDto;
+import com.example.Helpdesk.dto.RespostaApiDto;
 import com.example.Helpdesk.dto.TokenResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody @Valid LoginRequestDto dto) {
+    public ResponseEntity<RespostaApiDto<TokenResponseDto>> login(@RequestBody @Valid LoginRequestDto dto) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
         this.authenticationManager.authenticate(usernamePassword);
 
         String token = tokenService.gerarToken(dto.email());
-        return ResponseEntity.ok(new TokenResponseDto(token));
+
+        return ResponseEntity.ok(
+                new RespostaApiDto<>("Login realizado com sucesso!", new TokenResponseDto(token))
+        );
     }
 }

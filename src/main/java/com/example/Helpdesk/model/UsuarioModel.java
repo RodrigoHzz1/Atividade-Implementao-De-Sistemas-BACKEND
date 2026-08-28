@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,10 +42,25 @@ public class UsuarioModel implements UserDetails {
         this.perfil = perfil;
     }
 
-    // Métodos da interface UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + this.perfil.name()));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if (this.perfil == PerfilUsuario.ADMIN) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_TECNICO"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        } else if (this.perfil == PerfilUsuario.TECNICO_N1
+                || this.perfil == PerfilUsuario.TECNICO_N2
+                || this.perfil == PerfilUsuario.TECNICO_N3) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_TECNICO"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + this.perfil.name()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        }
+
+        return authorities;
     }
 
     @Override
@@ -76,7 +92,6 @@ public class UsuarioModel implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
     public Long getId() {
         return id;
