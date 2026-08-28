@@ -7,6 +7,7 @@ import com.example.Helpdesk.model.UsuarioModel;
 import com.example.Helpdesk.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,5 +87,20 @@ public class UsuarioService {
 
     private UsuarioResponseDto converterParaDto(UsuarioModel usuario) {
         return new UsuarioResponseDto(usuario);
+    }
+
+    public UsuarioResponseDto alterarPerfil(Long id, PerfilUsuario novoPerfil) {
+        UsuarioModel usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+
+        usuario.setPerfil(novoPerfil);
+
+        UsuarioModel usuarioAtualizado = usuarioRepository.save(usuario);
+        return converterParaDto(usuarioAtualizado);
+    }
+
+
+    public UsuarioResponseDto promoverParaAdmin(Long id) {
+        return alterarPerfil(id, PerfilUsuario.ADMIN);
     }
 }

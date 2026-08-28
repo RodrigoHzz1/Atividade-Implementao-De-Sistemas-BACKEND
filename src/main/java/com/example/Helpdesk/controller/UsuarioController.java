@@ -29,4 +29,16 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new RespostaApiDto<>("Usuário cadastrado com sucesso!", salvo));
     }
+
+    @PatchMapping("/{id}/perfil")
+    public ResponseEntity<UsuarioResponseDto> alterarPerfil(
+            @PathVariable Long id,
+            @RequestParam String perfil) {
+
+
+        PerfilUsuario perfilEnum = PerfilUsuario.valueOf(perfil.trim().toUpperCase());
+
+        UsuarioResponseDto usuarioAtualizado = usuarioService.alterarPerfil(id, perfilEnum);
+        return ResponseEntity.ok(usuarioAtualizado);
+    }
 }
