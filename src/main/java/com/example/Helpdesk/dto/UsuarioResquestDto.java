@@ -14,8 +14,8 @@ public class UsuarioResquestDto {
     @Email(message = "Informe um email válido")
     private String email;
 
-    @NotNull(message = "Informe a senha")
-    @Size(max = '4', min = '8', message = "A senha deve ter de 8 a 4 caracteres")
+    @NotBlank(message = "Informe a senha")
+    @Size(min = 4, max = 20, message = "A senha deve ter entre 4 e 20 caracteres")
     private String senha;
 
     public UsuarioResquestDto() {
@@ -43,11 +43,11 @@ public class UsuarioResquestDto {
         this.email = email;
     }
 
-    public @NotNull(message = "Informe a senha") @Size(max = '4', min = '8', message = "A senha deve ter de 8 a 4 caracteres") String getSenha() {
+    public @NotBlank(message = "Informe a senha") @Size(min = 4, max = 20, message = "A senha deve ter entre 4 e 20 caracteres") String getSenha() {
         return senha;
     }
 
-    public void setSenha(@NotNull(message = "Informe a senha") @Size(max = '4', min = '8', message = "A senha deve ter de 8 a 4 caracteres") String senha) {
+    public void setSenha(@NotBlank(message = "Informe a senha") @Size(min = 4, max = 20, message = "A senha deve ter entre 4 e 20 caracteres") String senha) {
         this.senha = senha;
     }
 }

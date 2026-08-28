@@ -23,14 +23,15 @@ public class ChamadoService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public ChamadoResponseDto criar(ChamadoRequestDto dto) {
-        UsuarioModel solicitante = usuarioRepository.findById(dto.getUsuarioId())
+    // Método atualizado para receber o e-mail/login do usuário autenticado
+    public ChamadoResponseDto criar(ChamadoRequestDto dto, String emailUsuario) {
+        UsuarioModel solicitante = usuarioRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuário solicitante não encontrado."));
 
         ChamadoModel chamado = new ChamadoModel();
-        chamado.setTitulo(dto.getTitulo());
-        chamado.setDescricao(dto.getDescricao());
-        chamado.setEquipamento(dto.getEquipamento());
+        chamado.setTitulo(dto.titulo());             // Chamada direta do record
+        chamado.setDescricao(dto.descricao());       // Chamada direta do record
+        chamado.setEquipamento(dto.equipamento());   // Chamada direta do record
         chamado.setSolicitante(solicitante);
 
         ChamadoModel salvo = chamadoRepository.save(chamado);

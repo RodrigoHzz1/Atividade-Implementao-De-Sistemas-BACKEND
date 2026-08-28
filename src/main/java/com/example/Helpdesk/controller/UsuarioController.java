@@ -2,6 +2,7 @@ package com.example.Helpdesk.controller;
 
 import com.example.Helpdesk.dto.UsuarioResponseDto;
 import com.example.Helpdesk.dto.UsuarioResquestDto;
+import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import com.example.Helpdesk.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,17 @@ public class UsuarioController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         usuarioService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/perfil")
+    public ResponseEntity<UsuarioResponseDto> alterarPerfil(
+            @PathVariable Long id,
+            @RequestParam String perfil) {
+
+
+        PerfilUsuario perfilEnum = PerfilUsuario.valueOf(perfil.trim().toUpperCase());
+
+        UsuarioResponseDto usuarioAtualizado = usuarioService.alterarPerfil(id, perfilEnum);
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 }
