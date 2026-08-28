@@ -10,6 +10,8 @@ import com.example.Helpdesk.model.UsuarioModel;
 import com.example.Helpdesk.repository.AtendimentoRepository;
 import com.example.Helpdesk.repository.ChamadoRepository;
 import com.example.Helpdesk.repository.UsuarioRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,44 +63,53 @@ public class AtendimentoService {
     }
 
     public List<AtendimentoResponseDto> listarPorChamado(Long chamadoId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isTecnicoOuAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TECNICO") || a.getAuthority().equals("ROLE_ADMIN"));
+
         return atendimentoRepository.findByChamadoId(chamadoId).stream()
-                .map(this::converterParaDto)
+                .map(atendimento -> isTecnicoOuAdmin ? new AtendimentoResponseDto(atendimento) : AtendimentoResponseDto.paraCliente(atendimento))
                 .collect(Collectors.toList());
     }
 
-    private void validarPermissoes(UsuarioModel tecnico, ChamadoModel chamado, NivelSuporte novoNivel){
-        //Admin acesso total
-        if (tecnico.getPerfil()== PerfilUsuario.ADMIN){
+    public List<AtendimentoResponseDto> listarTodos() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isTecnicoOuAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TECNICO") || a.getAuthority().equals("ROLE_ADMIN"));
+
+        List<AtendimentoModel> atendimentos = atendimentoRepository.findAll();
+
+        if (isTecnicoOuAdmin) {
+            return atendimentos.stream()
+                    .map(AtendimentoResponseDto::new)
+                    .toList();
+        } else {
+            return atendimentos.stream()
+                    .map(AtendimentoResponseDto::paraCliente)
+                    .toList();
+        }
+    }
+
+    private void validarPermissoes(UsuarioModel tecnico, ChamadoModel chamado, NivelSuporte novoNivel) {
+        if (tecnico.getPerfil() == PerfilUsuario.ADMIN) {
             return;
         }
-        //Cliente não pode atender chamados ou mudar fluxo
-        if (tecnico.getPerfil()== PerfilUsuario.CLIENTE){
+        if (tecnico.getPerfil() == PerfilUsuario.CLIENTE) {
             throw new RuntimeException("Permissão negada: Você não tem autorização para atender chamados");
         }
-        //Técnico N1 so tem autorização em chamados do Nível 1
-        if (tecnico.getPerfil()== PerfilUsuario.TECNICO_N1 && chamado.getNivelAtual() != NivelSuporte.N1){
-            throw new RuntimeException("Permissão negada: Técnico N1 não tem autorização para alterar chamados de nível" + chamado.getNivelAtual());
+        if (tecnico.getPerfil() == PerfilUsuario.TECNICO_N1 && chamado.getNivelAtual() != NivelSuporte.N1) {
+            throw new RuntimeException("Permissão negada: Técnico N1 não tem autorização para alterar chamados de nível " + chamado.getNivelAtual());
         }
-        //Técnico N2 não tem acesso a chamados do N3
-        if (tecnico.getPerfil()== PerfilUsuario.TECNICO_N2 && chamado.getNivelAtual() == NivelSuporte.N3){
+        if (tecnico.getPerfil() == PerfilUsuario.TECNICO_N2 && chamado.getNivelAtual() == NivelSuporte.N3) {
             throw new RuntimeException("Permissão negada: Técnico N2 não tem acesso a chamados do N3");
         }
-        //Proibido passar um chamado do N1 direto para o N3
-        if (tecnico.getPerfil()== PerfilUsuario.TECNICO_N1 && novoNivel == NivelSuporte.N3){
+        if (tecnico.getPerfil() == PerfilUsuario.TECNICO_N1 && novoNivel == NivelSuporte.N3) {
             throw new RuntimeException("Permissão negada: Técnico N1 não pode transferir chamados diretamente para o N3");
         }
     }
 
     private AtendimentoResponseDto converterParaDto(AtendimentoModel atendimento) {
-        return new AtendimentoResponseDto(
-                atendimento.getId(),
-                atendimento.getChamado().getId(),
-                atendimento.getTecnico().getNome(),
-                atendimento.getObservacao(),
-                atendimento.getPrioridade(),
-                atendimento.getStatus(),
-                atendimento.getNivelSuporte(),
-                atendimento.getDataAtendimento()
-        );
+        return new AtendimentoResponseDto(atendimento);
     }
 }

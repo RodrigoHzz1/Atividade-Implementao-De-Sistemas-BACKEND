@@ -1,62 +1,32 @@
 package com.example.Helpdesk.controller;
 
-import com.example.Helpdesk.dto.UsuarioResponseDto;
-import com.example.Helpdesk.dto.UsuarioResquestDto;
-import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
-import com.example.Helpdesk.services.UsuarioService;
+import com.example.Helpdesk.dto.RespostaApiDto;
+import com.example.Helpdesk.model.UsuarioModel;
+import com.example.Helpdesk.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    public UsuarioController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDto> criar(@Valid @RequestBody UsuarioResquestDto dto) {
-        UsuarioResponseDto novoUsuario = usuarioService.criar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
-    }
+    public ResponseEntity<RespostaApiDto<UsuarioModel>> cadastrar(@Valid @RequestBody UsuarioModel usuario) {
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        UsuarioModel salvo = usuarioRepository.save(usuario);
 
-    @GetMapping
-    public ResponseEntity<List<UsuarioResponseDto>> listarTodos() {
-        return ResponseEntity.ok(usuarioService.listarTodos());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioService.buscarPorId(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioResquestDto dto) {
-        return ResponseEntity.ok(usuarioService.atualizar(id, dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        usuarioService.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/perfil")
-    public ResponseEntity<UsuarioResponseDto> alterarPerfil(
-            @PathVariable Long id,
-            @RequestParam String perfil) {
-
-
-        PerfilUsuario perfilEnum = PerfilUsuario.valueOf(perfil.trim().toUpperCase());
-
-        UsuarioResponseDto usuarioAtualizado = usuarioService.alterarPerfil(id, perfilEnum);
-        return ResponseEntity.ok(usuarioAtualizado);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new RespostaApiDto<>("Usuário cadastrado com sucesso!", salvo));
     }
 }

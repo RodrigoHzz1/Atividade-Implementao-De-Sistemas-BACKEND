@@ -1,11 +1,14 @@
 package com.example.Helpdesk.dto;
 
+import com.example.Helpdesk.model.AtendimentoModel;
 import com.example.Helpdesk.model.ChamadosEnum.NivelSuporte;
 import com.example.Helpdesk.model.ChamadosEnum.Prioridade;
 import com.example.Helpdesk.model.ChamadosEnum.StatusChamado;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AtendimentoResponseDto {
 
     private Long id;
@@ -20,6 +23,7 @@ public class AtendimentoResponseDto {
     public AtendimentoResponseDto() {
     }
 
+    // Construtor completo com todos os parâmetros
     public AtendimentoResponseDto(Long id, Long chamadoId, String nomeTecnico, String observacao,
                                   Prioridade prioridade, StatusChamado status,
                                   NivelSuporte nivelSuporte, LocalDateTime dataAtendimento) {
@@ -33,35 +37,48 @@ public class AtendimentoResponseDto {
         this.dataAtendimento = dataAtendimento;
     }
 
-    public Long getId() {
-        return id;
+    // Mapeamento completo para Técnico e Admin
+    public AtendimentoResponseDto(AtendimentoModel atendimento) {
+        this.id = atendimento.getId();
+        this.chamadoId = atendimento.getChamado() != null ? atendimento.getChamado().getId() : null;
+        this.nomeTecnico = atendimento.getTecnico() != null ? atendimento.getTecnico().getNome() : null;
+        this.observacao = atendimento.getObservacao();
+        this.prioridade = atendimento.getPrioridade();
+        this.status = atendimento.getStatus();
+        this.nivelSuporte = atendimento.getNivelSuporte();
+        this.dataAtendimento = atendimento.getDataAtendimento();
     }
 
-    public Long getChamadoId() {
-        return chamadoId;
+    // Mapeamento resumido para Cliente (exibe apenas nomeTecnico, status e dataAtendimento)
+    public static AtendimentoResponseDto paraCliente(AtendimentoModel atendimento) {
+        AtendimentoResponseDto dto = new AtendimentoResponseDto();
+        dto.setNomeTecnico(atendimento.getTecnico() != null ? atendimento.getTecnico().getNome() : null);
+        dto.setStatus(atendimento.getStatus());
+        dto.setDataAtendimento(atendimento.getDataAtendimento());
+        return dto;
     }
 
-    public String getNomeTecnico() {
-        return nomeTecnico;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getObservacao() {
-        return observacao;
-    }
+    public Long getChamadoId() { return chamadoId; }
+    public void setChamadoId(Long chamadoId) { this.chamadoId = chamadoId; }
 
-    public Prioridade getPrioridade() {
-        return prioridade;
-    }
+    public String getNomeTecnico() { return nomeTecnico; }
+    public void setNomeTecnico(String nomeTecnico) { this.nomeTecnico = nomeTecnico; }
 
-    public StatusChamado getStatus() {
-        return status;
-    }
+    public String getObservacao() { return observacao; }
+    public void setObservacao(String observacao) { this.observacao = observacao; }
 
-    public NivelSuporte getNivelSuporte() {
-        return nivelSuporte;
-    }
+    public Prioridade getPrioridade() { return prioridade; }
+    public void setPrioridade(Prioridade prioridade) { this.prioridade = prioridade; }
 
-    public LocalDateTime getDataAtendimento() {
-        return dataAtendimento;
-    }
+    public StatusChamado getStatus() { return status; }
+    public void setStatus(StatusChamado status) { this.status = status; }
+
+    public NivelSuporte getNivelSuporte() { return nivelSuporte; }
+    public void setNivelSuporte(NivelSuporte nivelSuporte) { this.nivelSuporte = nivelSuporte; }
+
+    public LocalDateTime getDataAtendimento() { return dataAtendimento; }
+    public void setDataAtendimento(LocalDateTime dataAtendimento) { this.dataAtendimento = dataAtendimento; }
 }
