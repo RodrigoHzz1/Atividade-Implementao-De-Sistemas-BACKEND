@@ -21,10 +21,13 @@ public class TokenService {
     }
 
     public String gerarToken(String email) {
+        // Validade de 8 horas (1000ms * 60s * 60m * 8h)
+        long duracaoEmMilissegundos = 1000L * 60 * 60 * 8;
+
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
+                .expiration(new Date(System.currentTimeMillis() + duracaoEmMilissegundos))
                 .signWith(getSigningKey())
                 .compact();
     }

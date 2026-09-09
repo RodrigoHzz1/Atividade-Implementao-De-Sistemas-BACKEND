@@ -2,6 +2,8 @@ package com.example.Helpdesk.model;
 
 import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +23,9 @@ public class UsuarioModel implements UserDetails {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "E-mail inválido")
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
