@@ -71,20 +71,6 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public UsuarioResponseDto alterarPerfil(Long id, PerfilUsuario novoPerfil) {
-        UsuarioModel usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
-
-        usuario.setPerfil(novoPerfil);
-
-        UsuarioModel usuarioAtualizado = usuarioRepository.save(usuario);
-        return converterParaDto(usuarioAtualizado);
-    }
-
-    public UsuarioResponseDto promoverParaAdmin(Long id) {
-        return alterarPerfil(id, PerfilUsuario.ADMIN);
-    }
-
     private UsuarioResponseDto converterParaDto(UsuarioModel usuario) {
         return new UsuarioResponseDto(usuario);
     }
