@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -20,7 +22,6 @@ public class UsuarioController {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioService usuarioService;
 
-    // Construtor atualizado com a injeção do UsuarioService
     public UsuarioController(UsuarioRepository usuarioRepository,
                              PasswordEncoder passwordEncoder,
                              UsuarioService usuarioService) {
@@ -50,5 +51,17 @@ public class UsuarioController {
         return ResponseEntity.ok(
                 new RespostaApiDto<>("Perfil alterado com sucesso!", usuarioAtualizado)
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioResponseDto>> listarTodos() {
+        List<UsuarioResponseDto> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RespostaApiDto<Void>> deletar(@PathVariable Long id) {
+        usuarioService.deletar(id);
+        return ResponseEntity.ok(new RespostaApiDto<>("Usuário deletado com sucesso!", null));
     }
 }
