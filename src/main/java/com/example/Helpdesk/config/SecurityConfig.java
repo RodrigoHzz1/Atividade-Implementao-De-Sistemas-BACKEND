@@ -35,7 +35,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+<<<<<<< HEAD
+                        .requestMatchers("/error").permitAll() // Liberar rota de erros do Spring
+=======
                         .requestMatchers("/error").permitAll()
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -47,12 +51,19 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
+<<<<<<< HEAD
+                "http://localhost:3000", // React default
+                "http://localhost:5173", // Vite default
+                "http://127.0.0.1:5500", // Live Server
+                "http://localhost:5500"
+=======
                 "http://localhost:3000",
                 "http://localhost:5173",
                 "http://127.0.0.1:5500",
                 "http://localhost:5500",
                 "http://localhost:8080",
                 "http://127.0.0.1:8080"
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

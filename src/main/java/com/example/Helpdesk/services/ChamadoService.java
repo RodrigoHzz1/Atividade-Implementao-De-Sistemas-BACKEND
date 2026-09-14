@@ -5,6 +5,10 @@ import com.example.Helpdesk.dto.ChamadoResponseDto;
 import com.example.Helpdesk.model.ChamadoModel;
 import com.example.Helpdesk.model.ChamadosEnum.NivelSuporte;
 import com.example.Helpdesk.model.UsuarioModel;
+<<<<<<< HEAD
+import com.example.Helpdesk.repository.AtendimentoRepository;
+=======
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
 import com.example.Helpdesk.repository.ChamadoRepository;
 import com.example.Helpdesk.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,19 @@ public class ChamadoService {
 
     private final ChamadoRepository chamadoRepository;
     private final UsuarioRepository usuarioRepository;
+<<<<<<< HEAD
+    private final AtendimentoRepository atendimentoRepository;
+
+    public ChamadoService(ChamadoRepository chamadoRepository, UsuarioRepository usuarioRepository, AtendimentoRepository atendimentoRepository) {
+        this.chamadoRepository = chamadoRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.atendimentoRepository = atendimentoRepository;
+=======
 
     public ChamadoService(ChamadoRepository chamadoRepository, UsuarioRepository usuarioRepository) {
         this.chamadoRepository = chamadoRepository;
         this.usuarioRepository = usuarioRepository;
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     }
 
     // Método atualizado para receber o e-mail/login do usuário autenticado
@@ -71,6 +84,19 @@ public class ChamadoService {
                 .collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
+    // Exclui o chamado e o histórico de atendimentos vinculados a ele
+    // (o atendimento não tem sentido de existir sem o chamado que o originou).
+    public void excluir(Long id) {
+        if (!chamadoRepository.existsById(id)) {
+            throw new RuntimeException("Chamado não encontrado com o ID: " + id);
+        }
+        atendimentoRepository.deleteAll(atendimentoRepository.findByChamadoId(id));
+        chamadoRepository.deleteById(id);
+    }
+
+=======
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     private ChamadoResponseDto converterParaDto(ChamadoModel chamado) {
         return new ChamadoResponseDto(
                 chamado.getId(),
