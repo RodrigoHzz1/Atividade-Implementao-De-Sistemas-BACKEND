@@ -2,6 +2,7 @@ package com.example.Helpdesk.services;
 
 import com.example.Helpdesk.dto.UsuarioResponseDto;
 import com.example.Helpdesk.dto.UsuarioResquestDto;
+<<<<<<< HEAD
 import com.example.Helpdesk.model.ChamadoModel;
 import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import com.example.Helpdesk.model.UsuarioModel;
@@ -9,6 +10,11 @@ import com.example.Helpdesk.repository.AtendimentoRepository;
 import com.example.Helpdesk.repository.ChamadoRepository;
 import com.example.Helpdesk.repository.UsuarioRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+=======
+import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
+import com.example.Helpdesk.model.UsuarioModel;
+import com.example.Helpdesk.repository.UsuarioRepository;
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
@@ -21,6 +27,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+<<<<<<< HEAD
     private final ChamadoRepository chamadoRepository;
     private final AtendimentoRepository atendimentoRepository;
 
@@ -30,6 +37,12 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
         this.chamadoRepository = chamadoRepository;
         this.atendimentoRepository = atendimentoRepository;
+=======
+
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     }
 
     public UsuarioResponseDto criar(UsuarioResquestDto dto) {
@@ -73,6 +86,7 @@ public class UsuarioService {
         return converterParaDto(usuario);
     }
 
+<<<<<<< HEAD
     // Exclui o usuário mesmo que existam chamados/atendimentos vinculados a
     // ele, tratando cada vínculo de forma coerente:
     //  1) Chamados que ELE mesmo abriu (solicitante) são removidos, junto
@@ -108,6 +122,13 @@ public class UsuarioService {
                 "Não foi possível excluir este usuário devido a um vínculo não tratado no sistema."
             );
         }
+=======
+    public void deletar(Long id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new RuntimeException("Usuário não encontrado com ID: " + id);
+        }
+        usuarioRepository.deleteById(id);
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     }
 
     private UsuarioResponseDto converterParaDto(UsuarioModel usuario) {

@@ -22,7 +22,10 @@ public class UsuarioController {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioService usuarioService;
 
+<<<<<<< HEAD
     // Construtor atualizado com a injeção do UsuarioService
+=======
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     public UsuarioController(UsuarioRepository usuarioRepository,
                              PasswordEncoder passwordEncoder,
                              UsuarioService usuarioService) {
@@ -40,12 +43,15 @@ public class UsuarioController {
                 .body(new RespostaApiDto<>("Usuário cadastrado com sucesso!", salvo));
     }
 
+<<<<<<< HEAD
     @GetMapping
     public ResponseEntity<RespostaApiDto<List<UsuarioResponseDto>>> listarTodos() {
         List<UsuarioResponseDto> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(new RespostaApiDto<>("Usuários listados com sucesso!", usuarios));
     }
 
+=======
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     @PatchMapping("/{id}/perfil")
     public ResponseEntity<RespostaApiDto<UsuarioResponseDto>> alterarPerfil(
             @PathVariable Long id,
@@ -60,9 +66,22 @@ public class UsuarioController {
         );
     }
 
+<<<<<<< HEAD
     @DeleteMapping("/{id}")
     public ResponseEntity<RespostaApiDto<Void>> excluir(@PathVariable Long id) {
         usuarioService.deletar(id);
         return ResponseEntity.ok(new RespostaApiDto<>("Usuário excluído com sucesso!"));
+=======
+    @GetMapping
+    public ResponseEntity<List<UsuarioResponseDto>> listarTodos() {
+        List<UsuarioResponseDto> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RespostaApiDto<Void>> deletar(@PathVariable Long id) {
+        usuarioService.deletar(id);
+        return ResponseEntity.ok(new RespostaApiDto<>("Usuário deletado com sucesso!", null));
+>>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     }
 }
