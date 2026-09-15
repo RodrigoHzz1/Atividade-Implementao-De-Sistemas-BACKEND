@@ -2,13 +2,11 @@ package com.example.Helpdesk.services;
 
 import com.example.Helpdesk.dto.ChamadoRequestDto;
 import com.example.Helpdesk.dto.ChamadoResponseDto;
+import com.example.Helpdesk.dto.ChamadoUpdateRequestDto;
 import com.example.Helpdesk.model.ChamadoModel;
 import com.example.Helpdesk.model.ChamadosEnum.NivelSuporte;
 import com.example.Helpdesk.model.UsuarioModel;
-<<<<<<< HEAD
 import com.example.Helpdesk.repository.AtendimentoRepository;
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
 import com.example.Helpdesk.repository.ChamadoRepository;
 import com.example.Helpdesk.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -16,24 +14,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço que implementa regras de negócio para chamados.
+ * Responsável por criar, listar, atualizar e excluir tickets do sistema.
+ */
 @Service
 public class ChamadoService {
 
     private final ChamadoRepository chamadoRepository;
     private final UsuarioRepository usuarioRepository;
-<<<<<<< HEAD
     private final AtendimentoRepository atendimentoRepository;
 
     public ChamadoService(ChamadoRepository chamadoRepository, UsuarioRepository usuarioRepository, AtendimentoRepository atendimentoRepository) {
         this.chamadoRepository = chamadoRepository;
         this.usuarioRepository = usuarioRepository;
         this.atendimentoRepository = atendimentoRepository;
-=======
-
-    public ChamadoService(ChamadoRepository chamadoRepository, UsuarioRepository usuarioRepository) {
-        this.chamadoRepository = chamadoRepository;
-        this.usuarioRepository = usuarioRepository;
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     }
 
     // Método atualizado para receber o e-mail/login do usuário autenticado
@@ -84,7 +79,6 @@ public class ChamadoService {
                 .collect(Collectors.toList());
     }
 
-<<<<<<< HEAD
     // Exclui o chamado e o histórico de atendimentos vinculados a ele
     // (o atendimento não tem sentido de existir sem o chamado que o originou).
     public void excluir(Long id) {
@@ -95,8 +89,32 @@ public class ChamadoService {
         chamadoRepository.deleteById(id);
     }
 
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
+    // Edição direta do chamado pelo Admin (fora do fluxo normal de
+    // atendimento). Só atualiza os campos que vierem preenchidos no DTO.
+    public ChamadoResponseDto atualizar(Long id, ChamadoUpdateRequestDto dto) {
+        ChamadoModel chamado = chamadoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chamado não encontrado com o ID: " + id));
+
+        if (dto.titulo() != null && !dto.titulo().isBlank()) {
+            chamado.setTitulo(dto.titulo());
+        }
+        if (dto.descricao() != null && !dto.descricao().isBlank()) {
+            chamado.setDescricao(dto.descricao());
+        }
+        if (dto.equipamento() != null) {
+            chamado.setEquipamento(dto.equipamento());
+        }
+        if (dto.prioridade() != null) {
+            chamado.setPrioridade(dto.prioridade());
+        }
+        if (dto.status() != null) {
+            chamado.setStatus(dto.status());
+        }
+
+        ChamadoModel atualizado = chamadoRepository.save(chamado);
+        return converterParaDto(atualizado);
+    }
+
     private ChamadoResponseDto converterParaDto(ChamadoModel chamado) {
         return new ChamadoResponseDto(
                 chamado.getId(),

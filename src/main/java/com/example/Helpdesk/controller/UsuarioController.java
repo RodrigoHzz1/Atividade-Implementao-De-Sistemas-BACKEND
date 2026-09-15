@@ -2,6 +2,7 @@ package com.example.Helpdesk.controller;
 
 import com.example.Helpdesk.dto.RespostaApiDto;
 import com.example.Helpdesk.dto.UsuarioResponseDto;
+import com.example.Helpdesk.dto.UsuarioResquestDto;
 import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import com.example.Helpdesk.model.UsuarioModel;
 import com.example.Helpdesk.repository.UsuarioRepository;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador para gestão de usuários.
+ * Expõe endpoints de cadastro, listagem, atualização, alteração de perfil e exclusão.
+ */
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -22,10 +27,7 @@ public class UsuarioController {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioService usuarioService;
 
-<<<<<<< HEAD
     // Construtor atualizado com a injeção do UsuarioService
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     public UsuarioController(UsuarioRepository usuarioRepository,
                              PasswordEncoder passwordEncoder,
                              UsuarioService usuarioService) {
@@ -43,15 +45,21 @@ public class UsuarioController {
                 .body(new RespostaApiDto<>("Usuário cadastrado com sucesso!", salvo));
     }
 
-<<<<<<< HEAD
     @GetMapping
     public ResponseEntity<RespostaApiDto<List<UsuarioResponseDto>>> listarTodos() {
         List<UsuarioResponseDto> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(new RespostaApiDto<>("Usuários listados com sucesso!", usuarios));
     }
 
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
+    @PutMapping("/{id}")
+    public ResponseEntity<RespostaApiDto<UsuarioResponseDto>> atualizar(
+            @PathVariable Long id, @RequestBody UsuarioResquestDto dto) {
+        // Sem @Valid de propósito: editar nome/e-mail não deve exigir
+        // reenviar a senha (o service só troca a senha se ela vier preenchida).
+        UsuarioResponseDto atualizado = usuarioService.atualizar(id, dto);
+        return ResponseEntity.ok(new RespostaApiDto<>("Usuário atualizado com sucesso!", atualizado));
+    }
+
     @PatchMapping("/{id}/perfil")
     public ResponseEntity<RespostaApiDto<UsuarioResponseDto>> alterarPerfil(
             @PathVariable Long id,
@@ -66,22 +74,9 @@ public class UsuarioController {
         );
     }
 
-<<<<<<< HEAD
     @DeleteMapping("/{id}")
     public ResponseEntity<RespostaApiDto<Void>> excluir(@PathVariable Long id) {
         usuarioService.deletar(id);
         return ResponseEntity.ok(new RespostaApiDto<>("Usuário excluído com sucesso!"));
-=======
-    @GetMapping
-    public ResponseEntity<List<UsuarioResponseDto>> listarTodos() {
-        List<UsuarioResponseDto> usuarios = usuarioService.listarTodos();
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<RespostaApiDto<Void>> deletar(@PathVariable Long id) {
-        usuarioService.deletar(id);
-        return ResponseEntity.ok(new RespostaApiDto<>("Usuário deletado com sucesso!", null));
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     }
 }

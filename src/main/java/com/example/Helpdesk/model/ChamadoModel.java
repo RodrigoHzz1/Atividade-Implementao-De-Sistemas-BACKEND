@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidade que representa um chamado de suporte.
+ * Guarda informações do ticket, solicitante, técnico atribuído e data de criação.
+ */
 @Entity
 @Table(name = "Tab_Chamado")
 public class ChamadoModel {

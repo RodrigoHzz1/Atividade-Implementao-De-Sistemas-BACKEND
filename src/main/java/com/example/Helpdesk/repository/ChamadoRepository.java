@@ -7,14 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repositório para consultas de chamados por solicitante, técnico e nível atual.
+ */
 @Repository
 public interface ChamadoRepository extends JpaRepository<ChamadoModel, Long> {
 
     List<ChamadoModel> findBySolicitanteId(Long usuarioId);
-<<<<<<< HEAD
     List<ChamadoModel> findByTecnicoAtribuidoId(Long tecnicoId);
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
     List<ChamadoModel> findByNivelAtual(NivelSuporte nivelAtual);
     List<ChamadoModel> findByNivelAtualIn(List<NivelSuporte> niveis);
 }

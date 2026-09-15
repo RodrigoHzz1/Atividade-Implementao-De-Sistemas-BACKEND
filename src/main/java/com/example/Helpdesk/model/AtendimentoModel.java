@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidade que representa uma interação de atendimento.
+ * Cada registro guarda uma observação, o responsável, o chamado relacionado e o contexto do suporte.
+ */
 @Entity
 @Table(name = "Tab_Atendimento")
 public class AtendimentoModel {
@@ -19,30 +23,37 @@ public class AtendimentoModel {
     @JoinColumn(name = "chamado_id", nullable = false)
     private ChamadoModel chamado;
 
+    // Ajustado para nullable = true para aceitar mensagens antigas sem usuario_id
     @ManyToOne
-    @JoinColumn(name = "tecnico_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = true)
+    private UsuarioModel usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "tecnico_id", nullable = true)
     private UsuarioModel tecnico;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String observacao;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Prioridade prioridade;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private StatusChamado status;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private NivelSuporte nivelSuporte;
 
     private LocalDateTime dataAtendimento;
 
     @PrePersist
     public void prePersist() {
-        this.dataAtendimento = LocalDateTime.now();
+        if (this.dataAtendimento == null) {
+            this.dataAtendimento = LocalDateTime.now();
+        }
     }
 
     public AtendimentoModel() {
@@ -62,6 +73,14 @@ public class AtendimentoModel {
 
     public void setChamado(ChamadoModel chamado) {
         this.chamado = chamado;
+    }
+
+    public UsuarioModel getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioModel usuario) {
+        this.usuario = usuario;
     }
 
     public UsuarioModel getTecnico() {

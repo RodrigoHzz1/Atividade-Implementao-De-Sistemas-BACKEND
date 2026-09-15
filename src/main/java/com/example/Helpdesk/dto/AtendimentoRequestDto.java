@@ -6,24 +6,28 @@ import com.example.Helpdesk.model.ChamadosEnum.StatusChamado;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * DTO usado para registrar uma interação de atendimento.
+ * Inclui dados do chamado, do usuário que enviou a mensagem e, opcionalmente, do técnico e do status.
+ */
 public class AtendimentoRequestDto {
 
     @NotNull(message = "O ID do chamado é obrigatório")
     private Long chamadoId;
 
-    @NotNull(message = "O ID do técnico é obrigatório")
+    // Opcional: pode ser nulo se for enviado por um cliente
     private Long tecnicoId;
+
+    // Novo campo para registrar o remetente da mensagem
+    @NotNull(message = "O ID do usuário remetente é obrigatório")
+    private Long usuarioId;
 
     @NotBlank(message = "A observação do atendimento é obrigatória")
     private String observacao;
 
-    @NotNull(message = "A prioridade é obrigatória")
+    // Opcionais: mensagens simples do chat não exigem alteração de status/prioridade/nível
     private Prioridade prioridade;
-
-    @NotNull(message = "O status é obrigatório")
     private StatusChamado status;
-
-    @NotNull(message = "O nível de suporte é obrigatório")
     private NivelSuporte nivelSuporte;
 
     public AtendimentoRequestDto() {
@@ -43,6 +47,14 @@ public class AtendimentoRequestDto {
 
     public void setTecnicoId(Long tecnicoId) {
         this.tecnicoId = tecnicoId;
+    }
+
+    public Long getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public String getObservacao() {

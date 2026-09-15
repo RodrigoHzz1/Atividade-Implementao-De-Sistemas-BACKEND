@@ -4,16 +4,21 @@ import com.example.Helpdesk.model.AtendimentoModel;
 import com.example.Helpdesk.model.ChamadosEnum.NivelSuporte;
 import com.example.Helpdesk.model.ChamadosEnum.Prioridade;
 import com.example.Helpdesk.model.ChamadosEnum.StatusChamado;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+/**
+ * DTO de resposta para um atendimento registrado.
+ * Expõe os dados relevantes para o frontend exibir o histórico do chat e do chamado.
+ */
 public class AtendimentoResponseDto {
 
     private Long id;
     private Long chamadoId;
-    private String nomeTecnico;
+    private Long usuarioId;
+    private String usuarioNome;
+    private Long tecnicoId;
+    private String tecnicoNome;
     private String observacao;
     private Prioridade prioridade;
     private StatusChamado status;
@@ -23,25 +28,22 @@ public class AtendimentoResponseDto {
     public AtendimentoResponseDto() {
     }
 
-    // Construtor completo com todos os parâmetros
-    public AtendimentoResponseDto(Long id, Long chamadoId, String nomeTecnico, String observacao,
-                                  Prioridade prioridade, StatusChamado status,
-                                  NivelSuporte nivelSuporte, LocalDateTime dataAtendimento) {
-        this.id = id;
-        this.chamadoId = chamadoId;
-        this.nomeTecnico = nomeTecnico;
-        this.observacao = observacao;
-        this.prioridade = prioridade;
-        this.status = status;
-        this.nivelSuporte = nivelSuporte;
-        this.dataAtendimento = dataAtendimento;
-    }
-
-    // Mapeamento completo para Técnico e Admin
     public AtendimentoResponseDto(AtendimentoModel atendimento) {
         this.id = atendimento.getId();
         this.chamadoId = atendimento.getChamado() != null ? atendimento.getChamado().getId() : null;
-        this.nomeTecnico = atendimento.getTecnico() != null ? atendimento.getTecnico().getNome() : null;
+
+        // Tratamento seguro para o Usuário remetente
+        if (atendimento.getUsuario() != null) {
+            this.usuarioId = atendimento.getUsuario().getId();
+            this.usuarioNome = atendimento.getUsuario().getNome();
+        }
+
+        // Tratamento seguro para o Técnico (pode ser null)
+        if (atendimento.getTecnico() != null) {
+            this.tecnicoId = atendimento.getTecnico().getId();
+            this.tecnicoNome = atendimento.getTecnico().getNome();
+        }
+
         this.observacao = atendimento.getObservacao();
         this.prioridade = atendimento.getPrioridade();
         this.status = atendimento.getStatus();
@@ -49,23 +51,28 @@ public class AtendimentoResponseDto {
         this.dataAtendimento = atendimento.getDataAtendimento();
     }
 
-    // Mapeamento resumido para Cliente (exibe apenas nomeTecnico, status e dataAtendimento)
     public static AtendimentoResponseDto paraCliente(AtendimentoModel atendimento) {
-        AtendimentoResponseDto dto = new AtendimentoResponseDto();
-        dto.setNomeTecnico(atendimento.getTecnico() != null ? atendimento.getTecnico().getNome() : null);
-        dto.setStatus(atendimento.getStatus());
-        dto.setDataAtendimento(atendimento.getDataAtendimento());
-        return dto;
+        return new AtendimentoResponseDto(atendimento);
     }
 
+    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
     public Long getChamadoId() { return chamadoId; }
     public void setChamadoId(Long chamadoId) { this.chamadoId = chamadoId; }
 
-    public String getNomeTecnico() { return nomeTecnico; }
-    public void setNomeTecnico(String nomeTecnico) { this.nomeTecnico = nomeTecnico; }
+    public Long getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
+
+    public String getUsuarioNome() { return usuarioNome; }
+    public void setUsuarioNome(String usuarioNome) { this.usuarioNome = usuarioNome; }
+
+    public Long getTecnicoId() { return tecnicoId; }
+    public void setTecnicoId(Long tecnicoId) { this.tecnicoId = tecnicoId; }
+
+    public String getTecnicoNome() { return tecnicoNome; }
+    public void setTecnicoNome(String tecnicoNome) { this.tecnicoNome = tecnicoNome; }
 
     public String getObservacao() { return observacao; }
     public void setObservacao(String observacao) { this.observacao = observacao; }

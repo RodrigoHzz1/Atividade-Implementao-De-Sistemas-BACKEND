@@ -13,10 +13,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Filtro executado a cada requisição para validar o JWT do cliente.
+ * Se o token for válido, o usuário é autenticado no contexto do Spring Security.
+ */
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
+    /**
+     * Serviço responsável por gerar e validar tokens JWT.
+     */
     private final TokenService tokenService;
+
+    /**
+     * Repositório usado para buscar o usuário autenticado pelo e-mail contido no token.
+     */
     private final UsuarioRepository usuarioRepository;
 
     public SecurityFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
@@ -24,6 +35,9 @@ public class SecurityFilter extends OncePerRequestFilter {
         this.usuarioRepository = usuarioRepository;
     }
 
+    /**
+     * Valida o token presente no cabeçalho Authorization e define a autenticação atual.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -43,6 +57,9 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Extrai o valor do token a partir do cabeçalho Authorization com prefixo Bearer.
+     */
     private String recuperarToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) return null;
