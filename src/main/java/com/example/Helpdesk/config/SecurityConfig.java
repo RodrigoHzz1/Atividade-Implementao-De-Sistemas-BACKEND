@@ -33,9 +33,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Libera requisições preflight do navegador
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                        .requestMatchers("/ws-chat/**").permitAll() // Rota do WebSocket / SockJS liberada
+                        .requestMatchers("/ws-chat/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -43,31 +44,35 @@ public class SecurityConfig {
                 .build();
     }
 
-  @Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    
-    
-    configuration.setAllowedOrigins(List.of(
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "https://atividade-manutencao-e-implementacao.vercel.app" 
-    ));
-    
-  
-    configuration.setAllowedOriginPatterns(List.of(
-        "https://atividade-manutencao-e-implementacao-*.vercel.app"
-    ));
-    
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
-    configuration.setAllowCredentials(true);
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-}
+        // Origens explícitas (Locais e URLs fixas da Vercel)
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "https://atividade-manutencao-e-implementaca.vercel.app",
+            "https://atividade-manutencao-e-implementacao.vercel.app"
+        ));
+
+        // Padrões curinga para liberar branches de preview geradas automaticamente
+        configuration.setAllowedOriginPatterns(List.of(
+            "https://atividade-manutencao-e-imp-*.vercel.app",
+            "https://atividade-manutencao-e-implementaca-*.vercel.app",
+            "https://atividade-manutencao-e-implementacao-*.vercel.app"
+        ));
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
