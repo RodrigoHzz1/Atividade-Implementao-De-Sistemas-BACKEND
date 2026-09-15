@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
+/**
+ * Tratador global de exceções da API.
+ * Centraliza erros de negócio e retorna resposta consistente ao frontend.
+ */
 @RestControllerAdvice
 public class GlobalException {
     @ExceptionHandler(RuntimeException.class)

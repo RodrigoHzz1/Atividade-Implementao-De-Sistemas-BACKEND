@@ -4,6 +4,10 @@ import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO para atualização de dados do usuário.
+ * Permite alterar nome, e-mail e senha, e opcionalmente o perfil.
+ */
 public class UsuarioResquestDto {
 
     @NotBlank(message = "O nome é obrigatório")

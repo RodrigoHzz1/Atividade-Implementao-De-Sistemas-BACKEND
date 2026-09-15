@@ -2,6 +2,10 @@ package com.example.Helpdesk.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Estrutura padrão de resposta da API.
+ * Permite retornar uma mensagem e um objeto de dados em um único payload.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RespostaApiDto<T> {
 

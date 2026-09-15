@@ -2,10 +2,8 @@ package com.example.Helpdesk.controller;
 
 import com.example.Helpdesk.dto.ChamadoRequestDto;
 import com.example.Helpdesk.dto.ChamadoResponseDto;
-<<<<<<< HEAD
+import com.example.Helpdesk.dto.ChamadoUpdateRequestDto;
 import com.example.Helpdesk.dto.RespostaApiDto;
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
 import com.example.Helpdesk.services.ChamadoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador para operações de chamados.
+ * Permite criar, listar, editar e excluir registros de suporte.
+ */
 @RestController
 @RequestMapping("/chamados")
 public class ChamadoController {
@@ -44,13 +46,17 @@ public class ChamadoController {
     public ResponseEntity<List<ChamadoResponseDto>> listarTodos() {
         return ResponseEntity.ok(chamadoService.listarTodos());
     }
-<<<<<<< HEAD
 
     @DeleteMapping("/{id}")
     public ResponseEntity<RespostaApiDto<Void>> excluir(@PathVariable Long id) {
         chamadoService.excluir(id);
         return ResponseEntity.ok(new RespostaApiDto<>("Chamado excluído com sucesso!"));
     }
-=======
->>>>>>> 2e66d3441d0026350e888c13eaacd8e148c1c33e
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RespostaApiDto<ChamadoResponseDto>> atualizar(
+            @PathVariable Long id, @RequestBody ChamadoUpdateRequestDto dto) {
+        ChamadoResponseDto atualizado = chamadoService.atualizar(id, dto);
+        return ResponseEntity.ok(new RespostaApiDto<>("Chamado atualizado com sucesso!", atualizado));
+    }
 }

@@ -5,6 +5,9 @@ import com.example.Helpdesk.model.ChamadosEnum.StatusChamado;
 
 import java.time.LocalDateTime;
 
+/**
+ * DTO de resposta contendo os dados públicos de um chamado.
+ */
 public class ChamadoResponseDto {
     private Long id;
     private String titulo;

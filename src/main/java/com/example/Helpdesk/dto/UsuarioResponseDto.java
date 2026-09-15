@@ -3,6 +3,9 @@ package com.example.Helpdesk.dto;
 import com.example.Helpdesk.model.ChamadosEnum.PerfilUsuario;
 import com.example.Helpdesk.model.UsuarioModel;
 
+/**
+ * DTO de resposta com os dados públicos de um usuário.
+ */
 public class UsuarioResponseDto {
     private Long id;
     private String nome;

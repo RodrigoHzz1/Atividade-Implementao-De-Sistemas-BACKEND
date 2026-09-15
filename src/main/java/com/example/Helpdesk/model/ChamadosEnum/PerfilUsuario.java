@@ -2,6 +2,9 @@ package com.example.Helpdesk.model.ChamadosEnum;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+/**
+ * Perfis de acesso do sistema.
+ */
 public enum PerfilUsuario {
     CLIENTE,
     FUNCIONARIO,

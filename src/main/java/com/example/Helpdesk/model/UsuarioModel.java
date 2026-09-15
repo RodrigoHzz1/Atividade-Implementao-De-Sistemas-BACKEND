@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Entidade que representa um usuário do sistema.
+ * Implementa UserDetails para integração com o Spring Security.
+ */
 @Entity
 @Table(name = "Tab_User")
 public class UsuarioModel implements UserDetails {
