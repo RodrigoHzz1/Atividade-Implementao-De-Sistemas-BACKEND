@@ -6,7 +6,7 @@ package com.example.Helpdesk.model.ChamadosEnum;
 public enum StatusChamado {
     ABERTO,
     EM_ATENDIMENTO,
-    ARGURDANDO,
+    AGURDANDO,
     RESOLVIDO,
     CANCELADO;
 
